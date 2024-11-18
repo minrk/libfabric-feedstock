@@ -10,11 +10,17 @@ if [[ "$target_platform" == linux-* ]]; then
   build_with_libnl=" --with-libnl=$PREFIX "
 fi
 
-./configure --prefix=$PREFIX \
-            $build_with_libnl \
-            --disable-static \
-	    --disable-psm3 \
-	    --disable-opx
+if [[ "$target_platform" == osx-arm64 ]]; then
+  # fix outdated config.sub on mac arm
+  echo 'echo arm64-apple-darwin' > config/config.sub
+fi
+
+./configure \
+    --prefix=$PREFIX \
+    $build_with_libnl \
+    --disable-static \
+    --disable-psm3 \
+    --disable-opx
 
 make -j"${CPU_COUNT}"
 
