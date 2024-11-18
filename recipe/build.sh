@@ -17,6 +17,8 @@ fi
 
 ./configure \
     --prefix=$PREFIX \
+    --docdir=$PWD/noinst/doc \
+    --mandir=$PWD/noinst/man \
     $build_with_libnl \
     --disable-static \
     --disable-psm3 \

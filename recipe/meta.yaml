@@ -1,5 +1,5 @@
 {% set version = "1.22.0" %}
-{% set build = 1 %}
+{% set build = 2 %}
 
 package:
   name: libfabric
@@ -26,12 +26,14 @@ requirements:
   host:
     - libnl  # [linux]
     - rdma-core  # [linux]
-  run:
 
 test:
   commands:
     - fi_info --version
     - fi_info --list
+    - test ! -f $PREFIX/share/man/man1/fi_info.1
+    - test ! -f $PREFIX/share/man/man3/fi_atomic.3
+    - test ! -f $PREFIX/share/man/man7/fabric.7
 
 about:
   home: http://libfabric.org/
