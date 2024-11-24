@@ -1,4 +1,4 @@
-{% set version = "1.22.0" %}
+{% set version = "1.15.2" %}
 {% set build = 2 %}
 
 package:
@@ -7,7 +7,9 @@ package:
 
 source:
   url: https://github.com/ofiwg/libfabric/releases/download/v{{ version }}/libfabric-{{ version }}.tar.bz2
-  sha256: 485e6cafa66c9e4f6aa688d2c9526e274c47fda3a783cf1dd8f7c69a07e2d5fe
+# sha256: 485e6cafa66c9e4f6aa688d2c9526e274c47fda3a783cf1dd8f7c69a07e2d5fe  # 1.20.0
+  sha256: 8d050b88bee62e8512a88f5aa25f532f46bef587bc3f91022ecdb9b3b2676c7e  # 1.15.2
+# sha256: fc261388848f3cff555bd653f5cb901f6b9485ad285e5c53328b13f0e69f749a  # 1.14.0
 
 build:
   number: {{ build }}
