@@ -17,7 +17,7 @@ build:
   skip: true  # [win]
 
   run_exports:
-    - {{ pin_subpackage('libfabric', max_pin='x.x') }}
+    - {{ pin_subpackage('libfabric', max_pin='x') }}
 
 requirements:
   build:
