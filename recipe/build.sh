@@ -2,7 +2,17 @@
 
 set -ex
 
-export CC=$(basename "$CC")
+# verify ABI version
+ABI_LINE=$(grep '#define\s\+CURRENT_ABI' include/ofi_abi.h)
+echo "ABI_LINE=${ABI_LINE}"
+
+CURRENT_ABI=$(echo "$ABI_LINE" | grep -o 'FABRIC_[[:digit:]\.]\+')
+echo "CURRENT_ABI=${CURRENT_ABI}"
+
+if [[ "$CURRENT_ABI" != "FABRIC_$LIBFABRIC_ABI" ]]; then
+  echo "CURRENT_ABI=${CURRENT_ABI} != FABRIC_${$LIBFABRIC_ABI}"
+  exit 1
+fi
 
 build_with_libnl=""
 if [[ "$target_platform" == linux-* ]]; then

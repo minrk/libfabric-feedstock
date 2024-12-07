@@ -1,5 +1,13 @@
 {% set version = "1.22.0" %}
-{% set build = 1 %}
+{% set build = 2 %}
+
+# when abi version bumps, update the lower bound
+# check https://ofiwg.github.io/libfabric/v1.22.0/man/fabric.7.html#abi-changes
+{% set abi_version = "1.7" %}
+{% set abi_lower_bound = "1.20.0" %}
+# libfabric 2.0 is ABI 1.8, abi-compatible with 1.x
+# can't know if 3.0 will break ABI, but assume it _might_
+{% set abi_upper_bound = "3.0.0a0" %}
 
 package:
   name: libfabric
@@ -7,16 +15,16 @@ package:
 
 source:
   url: https://github.com/ofiwg/libfabric/releases/download/v{{ version }}/libfabric-{{ version }}.tar.bz2
-# sha256: 485e6cafa66c9e4f6aa688d2c9526e274c47fda3a783cf1dd8f7c69a07e2d5fe  # 1.20.0
-  sha256: 485e6cafa66c9e4f6aa688d2c9526e274c47fda3a783cf1dd8f7c69a07e2d5fe  # 1.15.2
-# sha256: fc261388848f3cff555bd653f5cb901f6b9485ad285e5c53328b13f0e69f749a  # 1.14.0
+  sha256: 485e6cafa66c9e4f6aa688d2c9526e274c47fda3a783cf1dd8f7c69a07e2d5fe
 
 build:
   number: {{ build }}
   skip: true  # [win]
+  script_env:
+    - LIBFABRIC_ABI={{ abi_version }}
 
   run_exports:
-    - {{ pin_subpackage('libfabric', max_pin='x') }}
+    - libfabric >={{ abi_lower_bound }},<{{ abi_upper_bound }}
 
 requirements:
   build:
