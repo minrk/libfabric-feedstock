@@ -3,10 +3,7 @@
 set -ex
 
 # verify ABI version
-ABI_LINE=$(grep '#define\s\+CURRENT_ABI' include/ofi_abi.h)
-echo "ABI_LINE=${ABI_LINE}"
-
-CURRENT_ABI=$(echo "$ABI_LINE" | grep -o 'FABRIC_[[:digit:]\.]\+')
+CURRENT_ABI=$(cat libfabric.map.in| grep -o '^FABRIC_[[:digit:]\.]\+' | tail -n 1)
 echo "CURRENT_ABI=${CURRENT_ABI}"
 
 if [[ "$CURRENT_ABI" != "FABRIC_$LIBFABRIC_ABI" ]]; then
