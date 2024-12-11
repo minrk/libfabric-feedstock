@@ -1,16 +1,15 @@
 {% set version = "1.22.0" %}
 {% set build = 2 %}
 
-# when abi version bumps, update the lower bound
-# check https://ofiwg.github.io/libfabric/v1.22.0/man/fabric.7.html#abi-changes
+# when abi version increments, update the lower bound
+# check https://ofiwg.github.io/libfabric/main/man/fabric.7.html#abi-changes
+{% set soversion = "1" %}
+{% set soversion_full = "1.25.0" %}
 {% set abi_version = "1.7" %}
 {% set abi_lower_bound = "1.20.0" %}
-# libfabric 2.0 is ABI 1.8, abi-compatible with 1.x
-# can't know if 3.0 will break ABI, but assume it _might_
-{% set abi_upper_bound = "3.0.0a0" %}
 
 package:
-  name: libfabric
+  name: libfabric-recipe
   version: {{ version }}
 
 source:
@@ -23,9 +22,6 @@ build:
   script_env:
     - LIBFABRIC_ABI={{ abi_version }}
 
-  run_exports:
-    - libfabric >={{ abi_lower_bound }},<{{ abi_upper_bound }}
-
 requirements:
   build:
     - {{ compiler('c') }}
@@ -37,13 +33,73 @@ requirements:
     - libnl  # [linux]
     - rdma-core  # [linux]
 
-test:
-  commands:
-    - fi_info --version
-    - fi_info --list
-    - test ! -f $PREFIX/share/man/man1/fi_info.1
-    - test ! -f $PREFIX/share/man/man3/fi_atomic.3
-    - test ! -f $PREFIX/share/man/man7/fabric.7
+outputs:
+  - name: libfabric{{ soversion }}
+    files:
+      - lib/libfabric.so.{{ soversion }}  # [linux]
+      - lib/libfabric.so.{{ soversion_full }}  # [linux]
+      - lib/libfabric.{{ soversion }}.dylib  # [osx]
+    requirements:
+      build:
+        - {{ compiler("c") }}
+        - {{ stdlib("c") }}
+      host:
+        - libnl  # [linux]
+        - rdma-core  # [linux]
+    test:
+      commands:
+        - test -f $PREFIX/lib/libfabric.so.{{ soversion }}  # [linux]
+        - test -f $PREFIX/lib/libfabric.{{ soversion }}.dylib  # [osx]
+  
+  - name: libfabric
+    # empty metapackage for mutual exclusivity
+    requirements:
+      run:
+        - {{ pin_subpackage("libfabric" ~ soversion, exact=True) }}
+    test:
+      commands:
+        - "true"
+    
+  - name: libfabric-bin
+    files:
+      - bin/
+    requirements:
+      build:
+        - {{ compiler("c") }}
+        - {{ stdlib("c") }}
+      host:
+        - {{ pin_subpackage("libfabric" ~ soversion, exact=True) }}
+      run:
+        - {{ pin_subpackage("libfabric", exact=True) }}
+        - {{ pin_subpackage("libfabric" ~ soversion, exact=True) }}
+    test:
+      commands:
+        - fi_info --version
+        - fi_info --list
+
+  - name: libfabric-devel
+    files:
+      - lib/libfabric.so  # [linux]
+      - lib/libfabric.dylib  # [osx]
+      - include/
+      - lib/pkgconfig/
+    build:
+      run_exports:
+        # depending on libfabric ensures mutual exclusivity
+        - libfabric
+        - {{ pin_subpackage("libfabric" ~ soversion, max_pin=None, min_pin=abi_lower_bound) }}
+    requirements:
+      run:
+        - {{ pin_subpackage("libfabric", exact=True) }}
+        - {{ pin_subpackage("libfabric" ~ soversion, exact=True) }}
+    test:
+      requires:
+        - pkg-config
+      commands:
+        - test -f $PREFIX/lib/libfabric${SHLIB_EXT}
+        - test -f $PREFIX/include/rdma/fabric.h
+        - pkg-config --cflags --libs libfabric
+        - pkg-config --validate libfabric
 
 about:
   home: http://libfabric.org/
@@ -53,6 +109,7 @@ about:
   summary: Libfabric is also known as Open Fabrics Interfaces (OFI).
 
 extra:
+  feedstock-name: libfabric
   recipe-maintainers:
     - j34ni
     - minrk
