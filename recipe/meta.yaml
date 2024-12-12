@@ -40,6 +40,7 @@ outputs:
       - lib/libfabric.so.{{ soversion_full }}  # [linux]
       - lib/libfabric.{{ soversion }}.dylib  # [osx]
     requirements:
+      # need everything with run_exports here
       build:
         - {{ compiler("c") }}
         - {{ stdlib("c") }}
@@ -52,7 +53,8 @@ outputs:
         - test -f $PREFIX/lib/libfabric.{{ soversion }}.dylib  # [osx]
   
   - name: libfabric
-    # empty metapackage for mutual exclusivity
+    # empty metapackage for mutual exclusivity and backward-compatiblity
+    # ensures only one libfabric{so} per env
     requirements:
       run:
         - {{ pin_subpackage("libfabric" ~ soversion, exact=True) }}
@@ -61,8 +63,11 @@ outputs:
         - "true"
     
   - name: libfabric-bin
+    # without output.script, glob will match anything in host,
+    # so make sure it only picks up fabric executables
+    # fortunately, these all start with `fi_`
     files:
-      - bin/
+      - bin/fi_*
     requirements:
       build:
         - {{ compiler("c") }}
@@ -74,6 +79,7 @@ outputs:
         - {{ pin_subpackage("libfabric" ~ soversion, exact=True) }}
     test:
       commands:
+        - test -f $PREFIX/bin/fi_info
         - fi_info --version
         - fi_info --list
 
