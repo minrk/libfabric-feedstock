@@ -4,7 +4,6 @@
 # when abi version increments, update the lower bound
 # check https://ofiwg.github.io/libfabric/main/man/fabric.7.html#abi-changes
 {% set soversion = "1" %}
-{% set soversion_full = "1.25.0" %}
 {% set abi_version = "1.7" %}
 {% set abi_lower_bound = "1.20.0" %}
 
@@ -36,9 +35,8 @@ requirements:
 outputs:
   - name: libfabric{{ soversion }}
     files:
-      - lib/libfabric.so.{{ soversion }}  # [linux]
-      - lib/libfabric.so.{{ soversion_full }}  # [linux]
-      - lib/libfabric.{{ soversion }}.dylib  # [osx]
+      - lib/libfabric.so.*  # [linux]
+      - lib/libfabric.*.dylib  # [osx]
     requirements:
       # need everything with run_exports here
       build:
@@ -51,6 +49,7 @@ outputs:
       commands:
         - test -f $PREFIX/lib/libfabric.so.{{ soversion }}  # [linux]
         - test -f $PREFIX/lib/libfabric.{{ soversion }}.dylib  # [osx]
+        - test ! -f $PREFIX/lib/libfabric${SHLIB_EXT}
   
   - name: libfabric
     # empty metapackage for mutual exclusivity and backward-compatiblity
