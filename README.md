@@ -47,20 +47,6 @@ Current build status
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/libfabric-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_" alt="variant">
                 </a>
               </td>
-            </tr><tr>
-              <td>osx_64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23945&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/libfabric-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23945&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/libfabric-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_" alt="variant">
-                </a>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -75,6 +61,9 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libfabric-green.svg)](https://anaconda.org/conda-forge/libfabric) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libfabric.svg)](https://anaconda.org/conda-forge/libfabric) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libfabric.svg)](https://anaconda.org/conda-forge/libfabric) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libfabric.svg)](https://anaconda.org/conda-forge/libfabric) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libfabric--bin-green.svg)](https://anaconda.org/conda-forge/libfabric-bin) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libfabric-bin.svg)](https://anaconda.org/conda-forge/libfabric-bin) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libfabric-bin.svg)](https://anaconda.org/conda-forge/libfabric-bin) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libfabric-bin.svg)](https://anaconda.org/conda-forge/libfabric-bin) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libfabric--devel-green.svg)](https://anaconda.org/conda-forge/libfabric-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libfabric-devel.svg)](https://anaconda.org/conda-forge/libfabric-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libfabric-devel.svg)](https://anaconda.org/conda-forge/libfabric-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libfabric-devel.svg)](https://anaconda.org/conda-forge/libfabric-devel) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libfabric1-green.svg)](https://anaconda.org/conda-forge/libfabric1) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libfabric1.svg)](https://anaconda.org/conda-forge/libfabric1) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libfabric1.svg)](https://anaconda.org/conda-forge/libfabric1) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libfabric1.svg)](https://anaconda.org/conda-forge/libfabric1) |
 
 Installing libfabric
 ====================
@@ -86,16 +75,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `libfabric` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `libfabric, libfabric-bin, libfabric-devel, libfabric1` can be installed with `conda`:
 
 ```
-conda install libfabric
+conda install libfabric libfabric-bin libfabric-devel libfabric1
 ```
 
 or with `mamba`:
 
 ```
-mamba install libfabric
+mamba install libfabric libfabric-bin libfabric-devel libfabric1
 ```
 
 It is possible to list all of the versions of `libfabric` available on your platform with `conda`:
