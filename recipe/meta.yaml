@@ -35,8 +35,9 @@ requirements:
 outputs:
   - name: libfabric{{ soversion }}
     files:
-      - lib/libfabric.so.*  # [linux]
-      - lib/libfabric.*.dylib  # [osx]
+      include:
+        - lib/lib*.so.*  # [linux]
+        - lib/lib*.*.dylib  # [osx]
     requirements:
       # need everything with run_exports here
       build:
@@ -62,11 +63,9 @@ outputs:
         - "true"
     
   - name: libfabric-bin
-    # without output.script, glob will match anything in host,
-    # so make sure it only picks up fabric executables
-    # fortunately, these all start with `fi_`
     files:
-      - bin/fi_*
+      include:
+        - bin/
     requirements:
       build:
         - {{ compiler("c") }}
@@ -84,10 +83,14 @@ outputs:
 
   - name: libfabric-devel
     files:
-      - lib/libfabric.so  # [linux]
-      - lib/libfabric.dylib  # [osx]
-      - include/
-      - lib/pkgconfig/
+      include:
+        - lib/
+        - include/
+        - lib/pkgconfig/
+      exclude:
+        # exclude versioned dylibs in libfabric{so}
+        - lib/lib*.so.*  # [linux]
+        - lib/lib*.*.dylib  # [osx]
     build:
       run_exports:
         # depending on libfabric ensures mutual exclusivity
