@@ -1,5 +1,5 @@
 {% set version = "1.22.0" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 # when abi version increments, update the lower bound
 # check https://ofiwg.github.io/libfabric/main/man/fabric.7.html#abi-changes
@@ -95,7 +95,8 @@ outputs:
       run_exports:
         # depending on libfabric ensures mutual exclusivity
         - libfabric
-        - {{ pin_subpackage("libfabric" ~ soversion, max_pin=None, min_pin=abi_lower_bound) }}
+        # don't use pin_subpackage, which doesn't allow explicit lower bound
+        - libfabric{{ soversion }} >={{ abi_lower_bound }}
     requirements:
       run:
         - {{ pin_subpackage("libfabric", exact=True) }}
