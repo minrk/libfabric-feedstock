@@ -17,7 +17,7 @@ source:
 
 build:
   number: {{ build }}
-  skip: true  # [win or osx]
+  skip: true  # [win]
   script_env:
     - LIBFABRIC_ABI={{ abi_version }}
 
